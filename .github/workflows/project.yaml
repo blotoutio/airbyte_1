@@ -1,5 +1,5 @@
 # https://github.com/marketplace/actions/assign-to-one-project#:~:text=GitHub%20Action%20for%20Assign%20to,columns%20in%20your%20project%20dashboard.
-name: Assign Issue to Airbyte Github Project
+name: Auto Assign to Airbyte Github Project
 
 on:
   issues:
@@ -12,6 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Assign to Airbyte Github Project
     steps:
+      - name: Assign NEW issues and NEW pull requests to airbyte github project
+        uses: srggrs/assign-one-project-github-action@1.2.0
+        if: github.event.action == 'opened'
+        with:
+          project: "https://github.com/airbytehq/airbyte/projects/1"
+          column_name: "Backlog"
       - name: Assign documentation issues to the Documentation Roadmap project
         uses: srggrs/assign-one-project-github-action@1.2.0
         if: |
