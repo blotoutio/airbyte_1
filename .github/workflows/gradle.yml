@@ -62,7 +62,7 @@ jobs:
           docker push blotout/airbyte_1-temporal:${{ env.DOCKER_TAG }}
 
       - name: Comment
-        uses: Manoj/comment-pr@v1
+        uses: NejcZdovc/comment-pr@v1
         with:
           message: "Docker tag: `${{ env.DOCKER_TAG }}`"
         env:
