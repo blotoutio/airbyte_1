@@ -7,7 +7,11 @@ on:
     paths:
         - 'airbyte-integrations/connectors/source-woocommerce/**'  # Trigger only on changes within this directory
   workflow_dispatch:  # Manually triggerable from GitHub UI
-  
+
+env:
+  DOCKER_TAG: |
+    ${{ github.event.pull_request.head.ref }}-${{ github.event.pull_request.head.sha }}  
+    
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -46,11 +50,11 @@ jobs:
     - name: Tag Docker image
       run: |
         docker images
-        docker tag airbyte/source-woocommerce:dev blotout/source-woocommerce:v1-latest
+        docker tag airbyte/source-woocommerce:dev blotout/source-woocommerce:${{ env.DOCKER_TAG }}
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push blotout/source-woocommerce:v1-latest
+        docker push blotout/source-woocommerce:${{ env.DOCKER_TAG }}
 
 
   output_image_tag:
@@ -59,4 +63,4 @@ jobs:
     steps:
       - name: Output Airbyte Server Docker Image Tag
         run: |
-          echo "Docker Image Tag: blotout/source-woocommerce:v1-latest"
+          echo "Docker Image Tag: blotout/source-woocommerce:${{ env.DOCKER_TAG }}"
