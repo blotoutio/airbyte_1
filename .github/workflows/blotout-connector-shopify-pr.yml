@@ -1,4 +1,4 @@
-name: Blotout Shopify Build and Push Shopify Source Docker Image
+name: PullRequest:Blotout Shopify Build and Push Shopify Source Docker Image
 
 on:
   pull_request:

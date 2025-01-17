@@ -10,8 +10,8 @@ on:
 
 env:
   DOCKER_TAG: |
-    ${{ github.event.pull_request.head.ref }}-${{ github.event.pull_request.head.sha }}
-    
+     ${{ github.ref_name }}-${{ github.sha }}
+
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
