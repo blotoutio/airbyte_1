@@ -21,17 +21,30 @@ def get_current_git_revision() -> str:  # noqa D103
 # def get_current_git_branch() -> str:  # noqa D103
 #     return git.Repo(search_parent_directories=True).active_branch.name
 
-def get_current_git_branch() -> str:  # noqa D103
-    repo = git.Repo(search_parent_directories=True)
+##### Commented out by Blotout Devops#####
+# def get_current_git_branch() -> str:  # noqa D103
+#     repo = git.Repo(search_parent_directories=True)
+#     try:
+#         if repo.head.is_detached:
+#             # Return a meaningful string or the detached HEAD commit hash
+#             return f"Detached HEAD at {repo.head.commit.hexsha}"
+#         return repo.active_branch.name
+#     except Exception as e:
+#         # Gracefully handle unexpected errors
+#         return f"Error retrieving branch: {e}"
+def get_current_git_branch() -> str:
     try:
+        repo = git.Repo(search_parent_directories=True)
+        
+        # Handle detached HEAD case
         if repo.head.is_detached:
-            # Return a meaningful string or the detached HEAD commit hash
-            return f"Detached HEAD at {repo.head.commit.hexsha}"
+            return f"detached-{repo.head.commit.hexsha[:7]}"  # Short commit hash
+        
+        # Return branch name if not detached
         return repo.active_branch.name
+    
     except Exception as e:
-        # Gracefully handle unexpected errors
-        return f"Error retrieving branch: {e}"
-
+        return "unknown-branch"
 
 async def get_modified_files_in_branch_remote(
     current_git_repo_url: str, current_git_branch: str, current_git_revision: str, diffed_branch: str = "master", retries: int = 3
