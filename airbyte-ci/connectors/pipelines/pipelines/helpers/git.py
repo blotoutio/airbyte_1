@@ -36,15 +36,20 @@ def get_current_git_revision() -> str:  # noqa D103
 def get_current_git_branch() -> str:
     try:
         repo = git.Repo(search_parent_directories=True)
-        
-        # Handle detached HEAD case
+
+        # If HEAD is detached, return commit hash
         if repo.head.is_detached:
             return f"detached-{repo.head.commit.hexsha[:7]}"  # Short commit hash
-        
-        # Return branch name if not detached
-        return repo.active_branch.name
-    
-    except Exception as e:
+
+        # Use symbolic reference instead of `active_branch`
+        branch_ref = repo.git.rev_parse("--abbrev-ref", "HEAD")
+
+        if branch_ref == "HEAD":  
+            return f"detached-{repo.head.commit.hexsha[:7]}"  # Fallback
+
+        return branch_ref  # Return branch name
+
+    except Exception:
         return "unknown-branch"
 ########################################        
 
