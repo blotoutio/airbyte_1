@@ -3,11 +3,10 @@ name: Release-Blotout Shopify Build and Push Shopify Source Docker Image
 on:
   release:
     types: [ "published" ]
+  workflow_dispatch:  # Manually triggerable from GitHub UI
 
 env:
-  DOCKER_IMAGE: |
-    ${{ github.ref_name }}
-  workflow_dispatch:  # Manually triggerable from GitHub UI
+  DOCKER_IMAGE: ${{ github.ref_name }}
 
 jobs:
   build_and_push:
