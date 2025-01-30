@@ -1,17 +1,14 @@
-name: Blotout Woocommerce Build and Push  Source Docker Image
+name: Release-Blotout Woocommerce Build and Push  Source Docker Image
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-        - 'airbyte-integrations/connectors/source-woocommerce/**'  # Trigger only on changes within this directory
-  workflow_dispatch:  # Manually triggerable from GitHub UI
+  release:
+    types: [ "published" ]
 
 env:
-  DOCKER_TAG: |
-     ${{ github.ref_name }}-${{ github.sha }}
-
+  DOCKER_IMAGE: |
+   ${{ github.ref_name }}
+  workflow_dispatch:  # Manually triggerable from GitHub UI
+  
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -20,8 +17,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0  
-        ref: ${{ github.event.pull_request.head.ref }}      
+        fetch-depth: 0
+        ref: ${{ github.ref }}
+
+    - name: Create a branch from the tag
+      run: |
+        git switch -c release-${{ github.ref_name }}
+
+    - name: Ensure branch is created if in detached HEAD
+      run: |
+        if [ -z "$(git symbolic-ref --short -q HEAD)" ]; then
+          echo "Creating temporary branch to avoid detached HEAD..."
+          git switch -c temp-branch
+        fi 
 
     - name: Set up Docker
       uses: docker/setup-buildx-action@v2
