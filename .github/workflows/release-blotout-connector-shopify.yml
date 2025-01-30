@@ -6,7 +6,8 @@ on:
   workflow_dispatch:  # Manually triggerable from GitHub UI
 
 env:
-  DOCKER_IMAGE: ${{ github.ref_name }}
+  DOCKER_IMAGE: |
+    blotout/source-shopify:${{ github.ref_name }}
 
 jobs:
   build_and_push:
@@ -53,11 +54,11 @@ jobs:
     - name: Tag Docker image
       run: |
         docker images
-        docker tag airbyte/source-shopify:dev blotout/source-shopify:${{ env.DOCKER_TAG }}
+        docker tag airbyte/source-shopify:dev ${{ env.DOCKER_IMAGE }}
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push blotout/source-shopify:${{ env.DOCKER_TAG }}
+        docker push ${{ env.DOCKER_IMAGE }}
 
 
   output_image_tag:
@@ -66,5 +67,5 @@ jobs:
     steps:
       - name: Output Airbyte Server Docker Image Tag
         run: |
-          echo "Docker Image Tag: blotout/source-shopify:${{ env.DOCKER_TAG }}"
+          echo "Docker Image Tag: ${{ env.DOCKER_IMAGE }}"
        
