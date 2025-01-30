@@ -32,6 +32,7 @@ def get_current_git_revision() -> str:  # noqa D103
 #     except Exception as e:
 #         # Gracefully handle unexpected errors
 #         return f"Error retrieving branch: {e}"
+
 def get_current_git_branch() -> str:
     try:
         repo = git.Repo(search_parent_directories=True)
@@ -45,6 +46,7 @@ def get_current_git_branch() -> str:
     
     except Exception as e:
         return "unknown-branch"
+########################################        
 
 async def get_modified_files_in_branch_remote(
     current_git_repo_url: str, current_git_branch: str, current_git_revision: str, diffed_branch: str = "master", retries: int = 3
